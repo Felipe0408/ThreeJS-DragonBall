@@ -17,6 +17,18 @@ scene.background = new THREE.Color(0x000000);
 //-----------------------------CAMERA-----------------------------
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 )
 camera.position.set( 0, 70, 60 )
+//AUDIO PRITTY PARA MOSTRAR
+const listener = new THREE.AudioListener();
+camera.add( listener );
+const sound = new THREE.Audio( listener );
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load( 'Models/Cake-jiafei.ogg', function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.5 );
+	sound.play();
+});
+
 
 //-----------------------------RENDERER-----------------------------
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -113,7 +125,7 @@ loaderGLTF.load(
   function (gltf) {
     objeto3 = gltf.scene;
     objeto3.position.set(0, 56, -38);
-    objeto3.scale.set(15, 15, 15);
+    objeto3.scale.set(25, 25, 25);
     scene.add(objeto3);
   },
   undefined,
