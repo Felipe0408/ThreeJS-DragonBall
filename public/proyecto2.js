@@ -3,10 +3,11 @@ import {OrbitControls} from './jsm/controls/OrbitControls.js'
 
 //IMPORT DE LOADERS
 import {GLTFLoader} from './jsm/loaders/GLTFLoader.js'
-import {FBXLoader} from './jsm/loaders/FBXLoader.js';
-import {OBJLoader} from './jsm/loaders/OBJLoader.js'
-import {MTLLoader} from './jsm/loaders/MTLloader.js'
-
+//IMPORT DEL PROCESING
+import { EffectComposer } from './jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from './jsm/postprocessing/RenderPass.js';
+import { GlitchPass } from './jsm/postprocessing/GlitchPass.js';
+import { UnrealBloomPass } from './jsm/postprocessing/UnrealBloomPass.js';
 
 //-----------------------------ESCENA-----------------------------
 const scene = new THREE.Scene();
@@ -75,13 +76,14 @@ scene.add(pointLight2);
 
 //-----------------------------OBJETOS-----------------------------
 //OBJETO 1 ESCENARIO DE TEMPLO DE KAMISAMA
+let objeto1
 const loaderGLTF = new GLTFLoader();
 loaderGLTF.load(
   'Models/kamisama_no_shinden.gltf',
   function (gltf) {
-    const object = gltf.scene;
-    object.scale.set(50, 50, 50)
-    scene.add(object);
+    objeto1 = gltf.scene;
+    objeto1.scale.set(50, 50, 50)
+    scene.add(objeto1);
   },
   undefined,
   function (error) {
@@ -89,13 +91,14 @@ loaderGLTF.load(
   }
 );
 //OBJETO 2 ESFERAS DEL DRAGON
+let objeto2
 loaderGLTF.load(
   'Models/the_dragon_balls.glb',
   function (gltf) {
-    const object = gltf.scene;
-    object.position.set(0, 53, -45);
-    object.scale.set(0.01, 0.01, 0.01);
-    scene.add(object);
+    objeto2 = gltf.scene;
+    objeto2.position.set(0, 53, -45);
+    objeto2.scale.set(0.01, 0.01, 0.01);
+    scene.add(objeto2);
   },
   undefined,
   function (error) {
@@ -103,13 +106,14 @@ loaderGLTF.load(
   }
 );
 //OBJETO 3 SHENGLONG
+let objeto3
 loaderGLTF.load(
   'Models/shenglong.glb',
   function (gltf) {
-    const object = gltf.scene;
-    object.position.set(0, 56, -38);
-    object.scale.set(15, 15, 15);
-    scene.add(object);
+    objeto3 = gltf.scene;
+    objeto3.position.set(0, 56, -38);
+    objeto3.scale.set(15, 15, 15);
+    scene.add(objeto3);
   },
   undefined,
   function (error) {
@@ -117,13 +121,14 @@ loaderGLTF.load(
   }
 );
 //OBJETO 4 GOKU SSJ
+let objeto4
 loaderGLTF.load(
   'Models/goku_ssj.glb',
   function (gltf4) {
-    const object4 = gltf4.scene;
-    object4.position.set(-6, 52, 45);
-    object4.scale.set(0.7, 0.7, 0.7);
-    scene.add(object4);
+    objeto4 = gltf4.scene;
+    objeto4.position.set(-6, 52, 45);
+    objeto4.scale.set(0.7, 0.7, 0.7);
+    scene.add(objeto4);
   },
   undefined,
   function (error) {
@@ -131,14 +136,15 @@ loaderGLTF.load(
   }
 );
 //OBJETO 5 VAINA DEBAJO DE GOKU
+let objeto5
 loaderGLTF.load(
   'Models/appearance_effect_light_beam.glb',
   function (gltf) {
-    const object = gltf.scene;
-    object.position.set(-6, 51, 45);
-    object.scale.set(2, 5, 2);
+    objeto5 = gltf.scene;
+    objeto5.position.set(-6, 51, 45);
+    objeto5.scale.set(2, 5, 2);
     //object.rotation.y = 25 * degToRad;
-    scene.add(object);
+    scene.add(objeto5);
   },
   undefined,
   function (error) {
@@ -146,15 +152,16 @@ loaderGLTF.load(
   }
 );
 //OBJETO 6 KAIO SAMA
+let objeto6
 const degToRad = Math.PI / 180; // Factor de conversión de grados a radianes
 loaderGLTF.load(
   'Models/king_kai_3d.glb',
   function (gltf) {
-    const object = gltf.scene;
-    object.position.set(-5, 54.5, 18);
-    object.scale.set(1.6, 1.6, 1.6);
-    object.rotation.y = 25 * degToRad;
-    scene.add(object);
+    const objeto6 = gltf.scene;
+    objeto6.position.set(-5, 54.5, 18);
+    objeto6.scale.set(1.6, 1.6, 1.6);
+    objeto6.rotation.y = 25 * degToRad;
+    scene.add(objeto6);
   },
   undefined,
   function (error) {
@@ -162,14 +169,15 @@ loaderGLTF.load(
   }
 );
 //OBJETO 7 BUU GORDO
+let objeto7
 loaderGLTF.load(
   'Models/fat_majin_buu.glb',
   function (gltf) {
-    const object = gltf.scene;
-    object.position.set(6, 52.2, 45);
-    object.scale.set(2.5, 2.5, 2.5);
-    object.rotation.y = 270 * degToRad;
-    scene.add(object);
+    objeto7 = gltf.scene;
+    objeto7.position.set(6, 52.2, 45);
+    objeto7.scale.set(2.5, 2.5, 2.5);
+    objeto7.rotation.y = 270 * degToRad;
+    scene.add(objeto7);
   },
   undefined,
   function (error) {
@@ -177,38 +185,24 @@ loaderGLTF.load(
   }
 );
 //OBJETO 8 GOKU CHUIQUITO EN LA NUBE
+let objeto8
 loaderGLTF.load(
   'Models/son_goku_and_kintoun_nimbus.glb',
   function (gltf) {
-    const object = gltf.scene;
-    object.position.set(-60, 85, -60);
-    object.scale.set(3, 3, 3);
-    object.rotation.y = 20 * degToRad;
-    scene.add(object);
+    objeto8 = gltf.scene;
+    objeto8.position.set(-60, 85, -60);
+    objeto8.scale.set(3, 3, 3);
+    objeto8.rotation.y = 20 * degToRad;
+    scene.add(objeto8);
   },
   undefined,
   function (error) {
     console.error(error);
   }
 );
-//OBJETO N XENO GOGETA
-//loaderGLTF.load(
-//  'Models/xeno_gogeta/scene.gltf',
-//  function (gltf) {
-//    const object = gltf.scene;
-//    object.scale.set(1.8, 1.8, 1.8);
-//    object.position.set(0, 54.5, 45);
-//    scene.add(object);
-//  },
-//  undefined,
-//  function (error) {
-//    console.error(error);
-//  }
-//);
 
 //-----------------------------SKYBOX-----------------------------
 var skyboxGeometry = new THREE.BoxGeometry(700, 700, 700);
-
 var textureLoader = new THREE.TextureLoader();
 var skyboxMaterials = [
   new THREE.MeshPhongMaterial({ map: textureLoader.load('Models/Skybox/Izquierda.png'), side: THREE.BackSide }), //Derecha
@@ -223,18 +217,26 @@ skybox.position.set(0, 200, 0);
 scene.add(skybox);
 scene.fog = new THREE.FogExp2(0x111729, 0.0039);
 
-//const textureLoader = new THREE.TextureLoader();
-//const skyTexture = textureLoader.load('Models/C_wWA4CWAAAh4Sw.jpg');
-//const skyMaterial = new THREE.MeshBasicMaterial({
-//  map: skyTexture, 
-//  side: THREE.BackSide
-//});
-//const sphereGeometry = new THREE.SphereGeometry(400, 32, 32);
-//const skySphere = new THREE.Mesh(sphereGeometry, skyMaterial);
-//skySphere.rotation.y = Math.PI / 2;
-//scene.add(skySphere);
 
+//-----------------------------POST-PROCESSING-----------------------------
+const composer = new EffectComposer( renderer );
 
+const renderPass = new RenderPass( scene, camera );
+composer.addPass( renderPass );
+
+//const glitchPass = new GlitchPass();
+//composer.addPass( glitchPass );
+
+const bloomPass = new UnrealBloomPass(
+    1.6,
+    1.0,
+    0.9,
+    0.5
+);
+
+composer.addPass(bloomPass);
+
+//-----------------------------ANIMACIONES-----------------------------
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
@@ -242,6 +244,7 @@ function animate() {
     render()
 }
 function render() {
-    renderer.render(scene, camera)
+    //renderer.render(scene, camera)
+    composer.render();
 }
 animate();
