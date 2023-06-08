@@ -1,11 +1,17 @@
 import * as THREE from 'three'
 import {OrbitControls} from './jsm/controls/OrbitControls.js'
 
+
 //IMPORT DE LOADERS
 import {GLTFLoader} from './jsm/loaders/GLTFLoader.js'
 import {FBXLoader} from './jsm/loaders/FBXLoader.js';
 import {OBJLoader} from './jsm/loaders/OBJLoader.js'
 import {MTLLoader} from './jsm/loaders/MTLloader.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { SSAOPass } from 'three/addons/postprocessing/SSAOPass.js';
+//import { MotionBlurPass } from 'three/addons/postprocessing/MotionBlurPass.js'
 
 
 //-----------------------------ESCENA-----------------------------
@@ -235,6 +241,8 @@ scene.fog = new THREE.FogExp2(0x111729, 0.0039);
 //scene.add(skySphere);
 
 
+
+
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
@@ -242,6 +250,26 @@ function animate() {
     render()
 }
 function render() {
-    renderer.render(scene, camera)
+    composer.render()
 }
+
+// UNREAL BLOOM PASS
+const renderScene = new RenderPass(scene, camera)
+const composer = new EffectComposer(renderer)
+composer.addPass(renderScene)
+
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+composer.addPass(bloomPass)
+
+//
+const ssaoPass = new SSAOPass(scene, camera);
+ssaoPass.kernelRadius = 16; // Adjust the radius to control the strength of the effect
+ssaoPass.minDistance = 0.005; // Adjust the minimum distance to control the effect range
+ssaoPass.maxDistance = 0.1; // Adjust the maximum distance to control the effect range
+composer.addPass(ssaoPass);
+
+//
+// const motionBlurPass = new MotionBlurPass(scene, camera);
+// composer.addPass(motionBlurPass);
+
 animate();
