@@ -9,6 +9,7 @@ import { RenderPass } from './jsm/postprocessing/RenderPass.js';
 import { GlitchPass } from './jsm/postprocessing/GlitchPass.js';
 import { UnrealBloomPass } from './jsm/postprocessing/UnrealBloomPass.js';
 
+
 //-----------------------------ESCENA-----------------------------
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
@@ -220,21 +221,18 @@ scene.fog = new THREE.FogExp2(0x111729, 0.0039);
 
 //-----------------------------POST-PROCESSING-----------------------------
 const composer = new EffectComposer( renderer );
-
 const renderPass = new RenderPass( scene, camera );
 composer.addPass( renderPass );
-
-//const glitchPass = new GlitchPass();
-//composer.addPass( glitchPass );
-
+const glitchPass = new GlitchPass();
+composer.addPass( glitchPass );
 const bloomPass = new UnrealBloomPass(
     1.6,
     1.0,
     0.9,
     0.5
 );
-
 composer.addPass(bloomPass);
+
 
 //-----------------------------ANIMACIONES-----------------------------
 function animate() {
